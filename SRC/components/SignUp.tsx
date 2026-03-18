@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import logoImg from '../assets/logo.png'
 
@@ -24,6 +24,24 @@ type FormState = {
 const SignUp = () => {
   const navigate = useNavigate()
   const [submitted, setSubmitted] = useState(false)
+  const [navVisible, setNavVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY
+      // Show navbar when scrolling up or at top; hide when scrolling down
+      if (currentY <= 10 || currentY < lastScrollY.current) {
+        setNavVisible(true)
+      } else if (currentY > lastScrollY.current) {
+        setNavVisible(false)
+      }
+      lastScrollY.current = currentY
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const [form, setForm] = useState<FormState>({
     fullName: '', dob: '', gender: '', email: '', phone: '',
     street: '', city: '', state: '', postal: '', country: '',
@@ -98,7 +116,7 @@ const SignUp = () => {
       <div style={{ position: 'fixed', bottom: '-100px', right: '-100px', width: '450px', height: '450px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
 
       {/* Fixed Navbar */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, width: '100%', backgroundColor: '#1abc9c', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 2rem' }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, width: '100%', backgroundColor: '#1abc9c', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.5rem 2rem', transform: navVisible ? 'translateY(0)' : 'translateY(-100%)', transition: 'transform 0.25s ease' }}>
         <img src={logoImg} alt="Sarthi" onClick={() => navigate('/')} style={{ height: '58px', width: 'auto', cursor: 'pointer' }} />
         <div style={{ display: 'flex', gap: '2rem' }}>
           {['Home', 'About', 'Contact'].map(l => (
@@ -106,8 +124,17 @@ const SignUp = () => {
           ))}
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button onClick={() => navigate('/login')} style={{ padding: '0.5rem 1.5rem', borderRadius: '999px', border: '1.5px solid rgba(255,255,255,0.7)', background: 'transparent', color: 'white', fontWeight: '600', cursor: 'pointer' }}>Login</button>
-          <button onClick={() => navigate('/signup')} style={{ padding: '0.5rem 1.5rem', borderRadius: '999px', border: 'none', background: '#f39c12', color: 'white', fontWeight: '600', cursor: 'pointer' }}>Sign Up</button>
+          <button onClick={() => navigate('/signup')} style={{ padding: '0.5rem 1.5rem', borderRadius: '999px', border: 'none', background: '#f39c12', color: 'white', fontWeight: '600', cursor: 'pointer', boxShadow: '0 2px 8px rgba(243,156,18,0.4)' }}>Sign Up</button>
+          {/* Profile Avatar */}
+          <button
+            onClick={() => navigate('/signin')}
+            title="Your Profile"
+            style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.7)', background: 'rgba(255,255,255,0.15)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', padding: 0, overflow: 'hidden' }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </button>
         </div>
       </nav>
 
@@ -242,7 +269,7 @@ const SignUp = () => {
 
           <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.6)', marginTop: '1.5rem', fontSize: '0.9rem' }}>
             Already have an account?{' '}
-            <button type="button" onClick={() => navigate('/login')} style={{ background: 'none', border: 'none', color: '#f39c12', fontWeight: '700', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <button type="button" onClick={() => navigate('/signin')} style={{ background: 'none', border: 'none', color: '#f39c12', fontWeight: '700', cursor: 'pointer', fontSize: '0.9rem' }}>
               Sign In
             </button>
           </p>

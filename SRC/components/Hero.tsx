@@ -116,19 +116,21 @@ const Hero = () => {
       </div>
 
       {/* CTA Button */}
-      <button style={{
-        backgroundColor: '#f39c12',
-        color: 'white',
-        padding: '0.9rem 2.5rem',
-        borderRadius: '999px',
-        fontSize: '1.05rem',
-        fontWeight: '700',
-        border: 'none',
-        cursor: 'pointer',
-        transition: 'all 0.25s',
-        boxShadow: '0 4px 20px rgba(243,156,18,0.45)',
-        letterSpacing: '0.3px'
-      }}
+      <button
+        onClick={() => window.location.href = '/signup'}
+        style={{
+          backgroundColor: '#f39c12',
+          color: 'white',
+          padding: '0.9rem 2.5rem',
+          borderRadius: '999px',
+          fontSize: '1.05rem',
+          fontWeight: '700',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'all 0.25s',
+          boxShadow: '0 4px 20px rgba(243,156,18,0.45)',
+          letterSpacing: '0.3px'
+        }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = '#e67e22'
           e.currentTarget.style.transform = 'translateY(-2px)'
