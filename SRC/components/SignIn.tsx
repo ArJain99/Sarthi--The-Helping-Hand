@@ -103,6 +103,7 @@ const Login = () => {
 
         {/* Submit */}
         <button
+          onClick={() => navigate('/dashboard')}
           style={{
             width: '100%',
             padding: '0.85rem',
