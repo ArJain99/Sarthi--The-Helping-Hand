@@ -84,6 +84,7 @@ const NgoDashboard = () => {
   const [expandedTask, setExpandedTask] = useState<number | null>(null)
   const [showNotifs, setShowNotifs] = useState(false)
   const [readNotifs, setReadNotifs] = useState<number[]>([])
+  const ngoId = localStorage.getItem('sarthi_ngo_id') || 'NGO-DEMO0001'
 
   /* Filter tasks */
   const filteredTasks = taskTab === 'All' ? tasks : tasks.filter(t => t.status === taskTab)
@@ -187,6 +188,7 @@ const NgoDashboard = () => {
                 {ngo.verified && <span style={{ fontSize: '0.75rem', background: 'rgba(14,165,233,0.25)', border: '1px solid rgba(14,165,233,0.5)', color: '#38bdf8', borderRadius: '999px', padding: '1px 6px' }}>✓ Verified</span>}
               </div>
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{ngo.type}</div>
+              <div style={{ fontSize: '0.62rem', color: '#0ea5e9', fontWeight: '700', letterSpacing: '0.5px', marginTop: '0.1rem' }}>{ngoId}</div>
             </div>
           </div>
           <button onClick={() => navigate('/')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
@@ -472,6 +474,7 @@ const NgoDashboard = () => {
                   <div style={{ fontWeight: '700', fontSize: '1rem' }}>{ngo.name}</div>
                   <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem' }}>{ngo.type}</div>
                   <span style={{ fontSize: '0.68rem', background: 'rgba(14,165,233,0.2)', border: '1px solid rgba(14,165,233,0.4)', color: '#38bdf8', borderRadius: '999px', padding: '1px 8px', marginTop: '0.2rem', display: 'inline-block' }}>✓ Verified NGO</span>
+                  <div style={{ fontSize: '0.7rem', color: '#0ea5e9', fontWeight: '700', letterSpacing: '0.5px', marginTop: '0.35rem' }}>{ngoId}</div>
                 </div>
               </div>
               {[

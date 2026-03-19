@@ -10,6 +10,9 @@ const NgoLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    const id = 'NGO-' + Math.random().toString(36).substring(2, 6).toUpperCase() + Date.now().toString(36).toUpperCase().slice(-4)
+    localStorage.setItem('sarthi_ngo_id', id)
+    localStorage.setItem('sarthi_ngo_email', form.email)
     navigate('/ngo-dashboard')
   }
 

@@ -11,6 +11,13 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const handleLogin = () => {
+    const id = 'VOL-' + Math.random().toString(36).substring(2, 6).toUpperCase() + Date.now().toString(36).toUpperCase().slice(-4)
+    localStorage.setItem('sarthi_vol_id', id)
+    localStorage.setItem('sarthi_vol_name', form.email.split('@')[0])
+    navigate('/dashboard')
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -103,7 +110,7 @@ const Login = () => {
 
         {/* Submit */}
         <button
-          onClick={() => navigate('/dashboard')}
+          onClick={handleLogin}
           style={{
             width: '100%',
             padding: '0.85rem',

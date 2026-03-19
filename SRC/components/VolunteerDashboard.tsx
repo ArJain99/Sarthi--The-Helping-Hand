@@ -90,6 +90,8 @@ const VolunteerDashboard = () => {
   ]
   const unreadCount = notifications.filter(n => !readNotifs.includes(n.id)).length
 
+  const volId = localStorage.getItem('sarthi_vol_id') || 'VOL-DEMO0001'
+
   const taskList = activeTab === 'Available' ? availableTasks : []
   const emptyMsg = activeTab === 'Completed' ? ['✅', 'No Completed Tasks Yet', 'Complete your first task!']
     : activeTab === 'Assigned' ? ['📋', 'No Assigned Tasks', 'Browse available tasks to get started.']
@@ -165,6 +167,7 @@ const VolunteerDashboard = () => {
                   <div>
                     <div style={{ fontWeight: '700', fontSize: '0.88rem' }}>{user.name}</div>
                     <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{user.role}</div>
+                    <div style={{ fontSize: '0.65rem', color: '#f39c12', fontWeight: '700', marginTop: '0.2rem', letterSpacing: '0.5px' }}>{volId}</div>
                   </div>
                 </div>
                 {/* Menu items */}
