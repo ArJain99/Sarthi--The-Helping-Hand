@@ -79,6 +79,16 @@ const VolunteerDashboard = () => {
   const [tooltip, setTooltip] = useState<string | null>(null)
   const [review, setReview] = useState({ ngo: '', rating: 0, hoverRating: 0, comment: '' })
   const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [showNotifs, setShowNotifs] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
+  const [readNotifs, setReadNotifs] = useState<number[]>([])
+
+  const notifications = [
+    { id: 1, icon: '✅', color: '#2ecc71', title: 'Task Completed', body: 'You completed "Food Distribution Drive" — great work!', time: '2 hrs ago', urgent: false },
+    { id: 2, icon: '📋', color: '#0ea5e9', title: 'New Task Available', body: 'A new task matching your skills was posted by Delhi Food Bank', time: '4 hrs ago', urgent: false },
+    { id: 3, icon: '🚨', color: '#e74c3c', title: 'Urgent Task Nearby', body: '"Elderly Care Support" needs volunteers urgently in Bangalore', time: '5 hrs ago', urgent: true },
+  ]
+  const unreadCount = notifications.filter(n => !readNotifs.includes(n.id)).length
 
   const taskList = activeTab === 'Available' ? availableTasks : []
   const emptyMsg = activeTab === 'Completed' ? ['✅', 'No Completed Tasks Yet', 'Complete your first task!']
@@ -101,18 +111,86 @@ const VolunteerDashboard = () => {
           <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.55)', letterSpacing: '0.5px' }}>Volunteer Dashboard</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <div style={{ position: 'relative', cursor: 'pointer' }}>
+
+          {/* ── Bell ── */}
+          <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => { setShowNotifs(v => !v); setShowProfile(false); setReadNotifs(notifications.map(n => n.id)) }}>
             <span style={{ fontSize: '1.25rem' }}>🔔</span>
-            <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#e74c3c', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: '700', padding: '1px 5px' }}>3</span>
+            {unreadCount > 0 && (
+              <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#e74c3c', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: '700', padding: '1px 5px' }}>{unreadCount}</span>
+            )}
+            {showNotifs && (
+              <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 'calc(100% + 14px)', right: '-8px', width: '320px', background: 'linear-gradient(160deg,#1a0533,#2d1060)', border: '1px solid rgba(243,156,18,0.3)', borderRadius: '18px', boxShadow: '0 16px 50px rgba(0,0,0,0.55)', zIndex: 200, overflow: 'hidden' }}>
+                <div style={{ padding: '0.9rem 1.2rem 0.6rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: '700', fontSize: '0.92rem' }}>🔔 Notifications</span>
+                  <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>{notifications.length} alerts</span>
+                </div>
+                <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  {notifications.map(n => (
+                    <div key={n.id} style={{ display: 'flex', gap: '0.7rem', padding: '0.8rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: n.urgent ? 'rgba(231,76,60,0.08)' : 'transparent', transition: 'background 0.15s' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = n.urgent ? 'rgba(231,76,60,0.15)' : 'rgba(255,255,255,0.04)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = n.urgent ? 'rgba(231,76,60,0.08)' : 'transparent')}>
+                      <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: `${n.color}22`, border: `1px solid ${n.color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{n.icon}</div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.1rem' }}>
+                          <span style={{ fontWeight: '700', fontSize: '0.78rem', color: n.urgent ? '#e74c3c' : 'rgba(255,255,255,0.9)' }}>{n.title}</span>
+                          <span style={{ fontSize: '0.67rem', color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.4' }}>{n.body}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ padding: '0.6rem', borderTop: '1px solid rgba(255,255,255,0.08)', textAlign: 'center' }}>
+                  <button onClick={() => setShowNotifs(false)} style={{ background: 'none', border: 'none', color: '#f39c12', fontWeight: '700', fontSize: '0.78rem', cursor: 'pointer' }}>Close ✕</button>
+                </div>
+              </div>
+            )}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #f39c12, #e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{user.initials}</div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '0.87rem', lineHeight: '1.1' }}>{user.name}</div>
-              <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{user.role}</div>
+
+          {/* ── User Avatar + Profile Dropdown ── */}
+          <div style={{ position: 'relative' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' }}
+              onClick={() => { setShowProfile(v => !v); setShowNotifs(false) }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #f39c12, #e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{user.initials}</div>
+              <div>
+                <div style={{ fontWeight: '700', fontSize: '0.87rem', lineHeight: '1.1' }}>{user.name}</div>
+                <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{user.role}</div>
+              </div>
             </div>
+            {showProfile && (
+              <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: '220px', background: 'linear-gradient(160deg,#1a0533,#2d1060)', border: '1px solid rgba(243,156,18,0.3)', borderRadius: '16px', boxShadow: '0 16px 50px rgba(0,0,0,0.5)', zIndex: 200, overflow: 'hidden' }}>
+                {/* Header */}
+                <div style={{ padding: '1rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg,#f39c12,#e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', flexShrink: 0 }}>{user.initials}</div>
+                  <div>
+                    <div style={{ fontWeight: '700', fontSize: '0.88rem' }}>{user.name}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{user.role}</div>
+                  </div>
+                </div>
+                {/* Menu items */}
+                {[
+                  { icon: '👤', label: 'My Profile' },
+                  { icon: '⚙️', label: 'Settings' },
+                  { icon: '🏅', label: 'My Achievements' },
+                  { icon: '📊', label: 'My Impact' },
+                ].map(item => (
+                  <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.65rem 1.2rem', cursor: 'pointer', transition: 'background 0.15s', fontSize: '0.87rem', fontWeight: '500' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                    <span>{item.icon}</span><span>{item.label}</span>
+                  </div>
+                ))}
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', padding: '0.5rem' }}>
+                  <button onClick={() => navigate('/')} style={{ width: '100%', padding: '0.55rem', borderRadius: '999px', background: 'rgba(231,76,60,0.15)', border: '1px solid rgba(231,76,60,0.35)', color: '#e74c3c', fontWeight: '700', fontSize: '0.82rem', cursor: 'pointer', transition: 'opacity 0.2s' }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = '0.8'} onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <button onClick={() => navigate('/signin')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
+
+          <button onClick={() => navigate('/')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}>Sign Out</button>
         </div>

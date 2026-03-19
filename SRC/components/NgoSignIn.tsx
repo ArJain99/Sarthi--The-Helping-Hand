@@ -8,6 +8,11 @@ const NgoLogin = () => {
   const [showPass, setShowPass] = useState(false)
   const [navVisible, setNavVisible] = useState(true)
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    navigate('/ngo-dashboard')
+  }
+
   React.useEffect(() => {
     const lastY = { current: 0 }
     const handleScroll = () => {
@@ -62,16 +67,18 @@ const NgoLogin = () => {
       {/* Card */}
       <div style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '24px', padding: '2.5rem', width: '100%', maxWidth: '420px', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}>
         <h1 style={{ color: 'white', fontSize: '1.75rem', fontWeight: '800', marginBottom: '0.35rem', textAlign: 'center' }}>
-          NGO Sign Up
+          NGO Sign In
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.55)', textAlign: 'center', marginBottom: '2rem', fontSize: '0.95rem' }}>
-          Sign up to access your organisation's dashboard
+          Sign in to access your organisation's dashboard
         </p>
+
+        <form onSubmit={handleLogin}>
 
         {/* Email */}
         <div style={{ marginBottom: '1.25rem' }}>
           <label style={labelStyle}>Organisation Email</label>
-          <input type="email" name="email" placeholder="org@example.com" value={form.email} onChange={handleChange} style={inputStyle}
+          <input type="email" required name="email" placeholder="org@example.com" value={form.email} onChange={handleChange} style={inputStyle}
             onFocus={e => { e.currentTarget.style.borderColor = 'rgba(26,188,156,0.7)'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
           />
@@ -80,7 +87,7 @@ const NgoLogin = () => {
         {/* Password */}
         <div style={{ marginBottom: '0.75rem', position: 'relative' }}>
           <label style={labelStyle}>Password</label>
-          <input type={showPass ? 'text' : 'password'} name="password" placeholder="Enter your password" value={form.password} onChange={handleChange} style={{ ...inputStyle, paddingRight: '3.5rem' }}
+          <input type={showPass ? 'text' : 'password'} required name="password" placeholder="Enter your password" value={form.password} onChange={handleChange} style={{ ...inputStyle, paddingRight: '3.5rem' }}
             onFocus={e => { e.currentTarget.style.borderColor = 'rgba(26,188,156,0.7)'; e.currentTarget.style.background = 'rgba(255,255,255,0.1)' }}
             onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.background = 'rgba(255,255,255,0.06)' }}
           />
@@ -96,11 +103,12 @@ const NgoLogin = () => {
           >Forgot password?</a>
         </div>
 
-        <button style={{ width: '100%', padding: '0.85rem', borderRadius: '999px', backgroundColor: '#1abc9c', color: 'white', fontWeight: '700', fontSize: '1rem', border: 'none', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,188,156,0.35)', marginBottom: '1.5rem', transition: 'all 0.2s' }}
+        <button type="submit" style={{ width: '100%', padding: '0.85rem', borderRadius: '999px', backgroundColor: '#1abc9c', color: 'white', fontWeight: '700', fontSize: '1rem', border: 'none', cursor: 'pointer', boxShadow: '0 4px 16px rgba(26,188,156,0.35)', marginBottom: '1.5rem', transition: 'all 0.2s' }}
           onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#16a085'; e.currentTarget.style.transform = 'translateY(-1px)' }}
           onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#1abc9c'; e.currentTarget.style.transform = 'translateY(0)' }}>
-          Sign Up to NGO Portal →
+          Sign In to NGO Portal →
         </button>
+        </form>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
           <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />

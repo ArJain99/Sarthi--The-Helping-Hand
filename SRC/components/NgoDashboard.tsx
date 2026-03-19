@@ -82,6 +82,8 @@ const NgoDashboard = () => {
   const [applicants, setApplicants] = useState(volunteerApplicants)
   const [tasks, setTasks] = useState(postedTasks)
   const [expandedTask, setExpandedTask] = useState<number | null>(null)
+  const [showNotifs, setShowNotifs] = useState(false)
+  const [readNotifs, setReadNotifs] = useState<number[]>([])
 
   /* Filter tasks */
   const filteredTasks = taskTab === 'All' ? tasks : tasks.filter(t => t.status === taskTab)
@@ -123,6 +125,16 @@ const NgoDashboard = () => {
 
   const pendingCount = applicants.filter(v => v.status === 'Pending').length
 
+  const notifications = [
+    { id: 1, icon: '🙋', color: '#f39c12', title: 'New Applicant', body: 'Rahul Sharma applied for "Food Distribution Drive"', time: '2 hrs ago', urgent: false },
+    { id: 2, icon: '🙋', color: '#f39c12', title: 'New Applicant', body: 'Priya Patel applied for "Food Distribution Drive"', time: '4 hrs ago', urgent: false },
+    { id: 3, icon: '🙋', color: '#3498db', title: 'New Applicant', body: 'Anjali Mehta applied for "Food Distribution Drive"', time: '3 days ago', urgent: false },
+    { id: 4, icon: '🚨', color: '#e74c3c', title: 'Urgent Task Nearly Full', body: '"Food Distribution Drive" is over capacity – review applicants', time: '1 hr ago', urgent: true },
+    { id: 5, icon: '✅', color: '#1abc9c', title: 'Task Completed', body: '"Warehouse Sorting & Packaging" was marked complete', time: '5 hrs ago', urgent: false },
+    { id: 6, icon: '⭐', color: '#f39c12', title: 'New Review', body: 'Sneha Reddy left a 5-star review for your NGO', time: '1 day ago', urgent: false },
+  ]
+  const unreadCount = notifications.filter(n => !readNotifs.includes(n.id)).length
+
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(150deg, #001a2e 0%, #003355 35%, #004475 60%, #002244 100%)', color: 'white', fontFamily: 'Inter, Segoe UI, sans-serif' }}>
 
@@ -133,10 +145,38 @@ const NgoDashboard = () => {
           <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.55)', letterSpacing: '0.5px' }}>NGO Dashboard</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          <div style={{ position: 'relative', cursor: 'pointer' }}>
+          <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => { setShowNotifs(v => !v); setReadNotifs(notifications.map(n => n.id)) }}>
             <span style={{ fontSize: '1.25rem' }}>🔔</span>
-            {pendingCount > 0 && (
-              <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#e74c3c', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: '700', padding: '1px 5px' }}>{pendingCount}</span>
+            {unreadCount > 0 && (
+              <span style={{ position: 'absolute', top: '-6px', right: '-8px', background: '#e74c3c', color: 'white', borderRadius: '999px', fontSize: '0.6rem', fontWeight: '700', padding: '1px 5px' }}>{unreadCount}</span>
+            )}
+            {/* ── Notification Dropdown ── */}
+            {showNotifs && (
+              <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 'calc(100% + 14px)', right: '-8px', width: '340px', background: 'linear-gradient(160deg,#002244,#003355)', border: '1px solid rgba(14,165,233,0.35)', borderRadius: '18px', boxShadow: '0 16px 50px rgba(0,0,0,0.5)', zIndex: 200, overflow: 'hidden' }}>
+                <div style={{ padding: '1rem 1.25rem 0.6rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontWeight: '700', fontSize: '0.95rem' }}>🔔 Notifications</span>
+                  <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)' }}>{notifications.length} total</span>
+                </div>
+                <div style={{ maxHeight: '360px', overflowY: 'auto' }}>
+                  {notifications.map(n => (
+                    <div key={n.id} style={{ display: 'flex', gap: '0.75rem', padding: '0.85rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: n.urgent ? 'rgba(231,76,60,0.07)' : 'transparent', transition: 'background 0.15s', cursor: 'default' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = n.urgent ? 'rgba(231,76,60,0.14)' : 'rgba(255,255,255,0.04)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = n.urgent ? 'rgba(231,76,60,0.07)' : 'transparent')}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: `${n.color}22`, border: `1px solid ${n.color}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>{n.icon}</div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.15rem' }}>
+                          <span style={{ fontWeight: '700', fontSize: '0.8rem', color: n.urgent ? '#e74c3c' : 'rgba(255,255,255,0.9)' }}>{n.title}{n.urgent && ' 🚨'}</span>
+                          <span style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
+                        </div>
+                        <div style={{ fontSize: '0.77rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.4' }}>{n.body}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ padding: '0.65rem 1.25rem', borderTop: '1px solid rgba(255,255,255,0.08)', textAlign: 'center' }}>
+                  <button onClick={() => setShowNotifs(false)} style={{ background: 'none', border: 'none', color: '#38bdf8', fontWeight: '700', fontSize: '0.8rem', cursor: 'pointer' }}>Close ✕</button>
+                </div>
+              </div>
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -149,7 +189,7 @@ const NgoDashboard = () => {
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{ngo.type}</div>
             </div>
           </div>
-          <button onClick={() => navigate('/ngo-signin')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
+          <button onClick={() => navigate('/')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}>Sign Out</button>
         </div>
