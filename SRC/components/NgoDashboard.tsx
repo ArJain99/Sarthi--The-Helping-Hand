@@ -85,6 +85,11 @@ const NgoDashboard = () => {
   const [showNotifs, setShowNotifs] = useState(false)
   const [readNotifs, setReadNotifs] = useState<number[]>([])
   const ngoId = localStorage.getItem('sarthi_ngo_id') || 'NGO-DEMO0001'
+  const rawNgoEmail = localStorage.getItem('sarthi_ngo_email') || ''
+  const ngoDisplayName = rawNgoEmail
+    ? rawNgoEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+    : ngo.name
+  const ngoInitials = ngoDisplayName.split(' ').slice(0, 2).map((w: string) => w[0]).join('').toUpperCase() || ngo.initials
 
   /* Filter tasks */
   const filteredTasks = taskTab === 'All' ? tasks : tasks.filter(t => t.status === taskTab)
@@ -181,19 +186,16 @@ const NgoDashboard = () => {
             )}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #0ea5e9, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{ngo.initials}</div>
+            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #0ea5e9, #06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{ngoInitials}</div>
             <div>
               <div style={{ fontWeight: '700', fontSize: '0.87rem', lineHeight: '1.1', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                {ngo.name}
+                {ngoDisplayName}
                 {ngo.verified && <span style={{ fontSize: '0.75rem', background: 'rgba(14,165,233,0.25)', border: '1px solid rgba(14,165,233,0.5)', color: '#38bdf8', borderRadius: '999px', padding: '1px 6px' }}>✓ Verified</span>}
               </div>
               <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{ngo.type}</div>
               <div style={{ fontSize: '0.62rem', color: '#0ea5e9', fontWeight: '700', letterSpacing: '0.5px', marginTop: '0.1rem' }}>{ngoId}</div>
             </div>
           </div>
-          <button onClick={() => navigate('/')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}>Sign Out</button>
         </div>
       </nav>
 
@@ -202,7 +204,7 @@ const NgoDashboard = () => {
         {/* ── Welcome ── */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: '800', marginBottom: '0.3rem' }}>Welcome back, {ngo.name}! 🏢</h1>
+            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: '800', marginBottom: '0.3rem' }}>Welcome back, {ngoDisplayName.split(' ')[0]}! 🏢</h1>
             <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1rem' }}>Manage your tasks, track volunteers, and grow your impact.</p>
           </div>
           <button onClick={() => setShowPostForm(true)} style={{ background: 'linear-gradient(90deg, #0ea5e9, #06b6d4)', border: 'none', borderRadius: '12px', color: 'white', padding: '0.75rem 1.5rem', fontSize: '0.95rem', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 4px 20px rgba(14,165,233,0.4)', transition: 'transform 0.2s, opacity 0.2s', whiteSpace: 'nowrap' }}

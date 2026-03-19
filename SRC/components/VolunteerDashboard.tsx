@@ -91,6 +91,9 @@ const VolunteerDashboard = () => {
   const unreadCount = notifications.filter(n => !readNotifs.includes(n.id)).length
 
   const volId = localStorage.getItem('sarthi_vol_id') || 'VOL-DEMO0001'
+  const rawName = localStorage.getItem('sarthi_vol_name') || 'rahul.sharma'
+  const displayName = rawName.replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  const initials = displayName.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
   const taskList = activeTab === 'Available' ? availableTasks : []
   const emptyMsg = activeTab === 'Completed' ? ['✅', 'No Completed Tasks Yet', 'Complete your first task!']
@@ -153,9 +156,9 @@ const VolunteerDashboard = () => {
           <div style={{ position: 'relative' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer' }}
               onClick={() => { setShowProfile(v => !v); setShowNotifs(false) }}>
-              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #f39c12, #e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{user.initials}</div>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #f39c12, #e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', fontSize: '0.85rem', border: '2px solid rgba(255,255,255,0.3)' }}>{initials}</div>
               <div>
-                <div style={{ fontWeight: '700', fontSize: '0.87rem', lineHeight: '1.1' }}>{user.name}</div>
+                <div style={{ fontWeight: '700', fontSize: '0.87rem', lineHeight: '1.1' }}>{displayName}</div>
                 <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.6)' }}>{user.role}</div>
               </div>
             </div>
@@ -163,9 +166,9 @@ const VolunteerDashboard = () => {
               <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 'calc(100% + 12px)', right: 0, width: '220px', background: 'linear-gradient(160deg,#1a0533,#2d1060)', border: '1px solid rgba(243,156,18,0.3)', borderRadius: '16px', boxShadow: '0 16px 50px rgba(0,0,0,0.5)', zIndex: 200, overflow: 'hidden' }}>
                 {/* Header */}
                 <div style={{ padding: '1rem 1.2rem', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg,#f39c12,#e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', flexShrink: 0 }}>{user.initials}</div>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg,#f39c12,#e67e22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700', flexShrink: 0 }}>{initials}</div>
                   <div>
-                    <div style={{ fontWeight: '700', fontSize: '0.88rem' }}>{user.name}</div>
+                    <div style={{ fontWeight: '700', fontSize: '0.88rem' }}>{displayName}</div>
                     <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{user.role}</div>
                     <div style={{ fontSize: '0.65rem', color: '#f39c12', fontWeight: '700', marginTop: '0.2rem', letterSpacing: '0.5px' }}>{volId}</div>
                   </div>
@@ -192,10 +195,6 @@ const VolunteerDashboard = () => {
               </div>
             )}
           </div>
-
-          <button onClick={() => navigate('/')} style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '999px', color: 'white', padding: '0.35rem 1rem', fontSize: '0.78rem', cursor: 'pointer', fontWeight: '600' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.25)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}>Sign Out</button>
         </div>
       </nav>
 
@@ -203,7 +202,7 @@ const VolunteerDashboard = () => {
 
         {/* Welcome */}
         <div style={{ marginBottom: '1.75rem' }}>
-          <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: '800', marginBottom: '0.3rem' }}>Welcome back, {user.name.split(' ')[0]}! 👋</h1>
+          <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.5rem)', fontWeight: '800', marginBottom: '0.3rem' }}>Welcome back, {displayName.split(' ')[0]}! 👋</h1>
           <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '1rem' }}>Ready to make an impact today?</p>
         </div>
 
