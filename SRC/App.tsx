@@ -10,6 +10,7 @@ import SignUp from './components/SignUp'
 import NgoSignIn from './components/NgoSignIn'
 import NgoSignUp from './components/NgoSignUp'
 import VolunteerDashboard from './components/VolunteerDashboard'
+import NgoDashboard from './components/NgoDashboard'
 
 function HomePage() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <Route path="/ngo-signin" element={<NgoSignIn />} />
       <Route path="/ngo-signup" element={<NgoSignUp />} />
       <Route path="/dashboard" element={<VolunteerDashboard />} />
+      <Route path="/ngo-dashboard" element={<NgoDashboard />} />
     </Routes>
   )
 }
