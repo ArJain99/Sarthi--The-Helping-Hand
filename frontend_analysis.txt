@@ -1,0 +1,64 @@
+Sarthi - The Helping Hand: Frontend Analysis
+=============================================
+
+1. OVERVIEW
+-----------
+The frontend is a React application built with Vite and TypeScript. It uses `react-router` for navigation, dividing user flows into two main branches: Volunteers and NGOs. State management is currently handled locally using React's `useState` and static data constants, with pseudo-authentication state stored in `localStorage` (e.g., `sarthi_vol_id`, `sarthi_ngo_id`).
+
+2. DATAFLOW DIAGRAM (Mermaid format)
+------------------------------------
+```mermaid
+graph TD
+    A[Landing Page '/'] --> B(Volunteer Sign In/Up)
+    A --> C(NGO Sign In/Up)
+    
+    B -->|Submit Form| D{Save to LocalStorage}
+    D -->|Navigate| E[Volunteer Dashboard '/dashboard']
+    
+    C -->|Submit Form| F{Save to LocalStorage}
+    F -->|Navigate| G[NGO Dashboard '/ngo-dashboard']
+    
+    E -->|Read Auth| H[(Local State & Constants)]
+    E -->|Apply for Task| H
+    E -->|Submit Review| H
+    
+    G -->|Read Auth| I[(Local State & Constants)]
+    G -->|Post New Task| I
+    G -->|Approve/Reject| I
+```
+
+3. PAGE DIRECTORY & WORKING
+---------------------------
+
+# Home Page (/)
+* Components: Navbar, Hero, Features, Testimonials, Footer
+* Working: This is the unauthenticated landing page. It showcases the platform's features and provides primary navigation links to the authentication workflows for both Volunteers and NGOs.
+
+# Volunteer Sign-In & Sign-Up (/signin, /signup)
+* Components: SignIn.tsx, SignUp.tsx
+* Working: Captures user credentials and basic information. On successful "authentication", it generates a localized session by storing `sarthi_vol_id` and `sarthi_vol_name` in browser `localStorage` and then forcibly redirects the user to `/dashboard`.
+
+# NGO Sign-In & Sign-Up (/ngo-signin, /ngo-signup)
+* Components: NgoSignIn.tsx, NgoSignUp.tsx
+* Working: Similar to the volunteer flow but tailored for organizations. Sets `sarthi_ngo_id` and `sarthi_ngo_email` in `localStorage` and redirects to `/ngo-dashboard`.
+
+# Volunteer Dashboard (/dashboard)
+* Component: VolunteerDashboard.tsx
+* Working: 
+  - Authentication: Reads the pseudo-auth tokens from `localStorage` (`sarthi_vol_id`, `sarthi_vol_name`) to display a personalized greeting and avatar.
+  - State Management: Uses `useState` for UI interactions like switching between tabs ("Available", "Assigned", "Completed"), showing/hiding dropdowns (Notifications, Profile), and managing the NGO review form submission state.
+  - Data: Loads static mock data arrays (availableTasks, recentActivity, topVolunteers, achievements, impactStats, weeklyChallenges, upcomingEvents, recommendations, communityFeed) to populate various widgets.
+  - Interactions: Volunteers can browse task lists based on tags (e.g., #Food, #Environment), view impact scores, track achievements, and simulate applying for tasks.
+
+# NGO Dashboard (/ngo-dashboard)
+* Component: NgoDashboard.tsx
+* Working:
+  - Authentication: Reads NGO credentials from `localStorage`.
+  - State Management: Manages complex state spanning task tabs ("All", "Active", "Draft", "Completed"), volunteer filters ("Pending", "Approved", "Rejected"), and a form to post new tasks.
+  - Data: Populates from mock static data constants mimicking API responses (postedTasks, volunteerApplicants, recentActivity, ngoStats).
+  - Interactions: NGOs can dynamically add new posting cards via the "Post New Task" form module which updates the local `tasks` state list. They can also manually change the status of volunteer applicants (approve/reject).
+
+4. IMPROVEMENT OPPORTUNITIES
+----------------------------
+- The dashboards currently rely heavily on hardcoded static data constants within the files themselves. Moving this to a real backend API (e.g., using `fetch` or `axios` in `useEffect` hooks) will be the next critical step.
+- LocalStorage authentication is insecure and merely acts as a placeholder for a real JWT or session cookie-based mechanism.

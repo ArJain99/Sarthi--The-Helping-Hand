@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+  color: #1a2e44;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  div[style*="grid-template-columns: repeat(4, 1fr)"],
+  div[style*="gridTemplateColumns: repeat(4,1fr)"],
+  div[style*="gridTemplateColumns: 'repeat(4,1fr)'"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  div[style*="grid-template-columns: 1.6fr 1fr"],
+  div[style*="gridTemplateColumns: 1.6fr 1fr"],
+  div[style*="gridTemplateColumns: '1.6fr 1fr'"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  div[style*="grid-template-columns: repeat(4, 1fr)"],
+  div[style*="grid-template-columns: repeat(3, 1fr)"],
+  div[style*="gridTemplateColumns: repeat(4,1fr)"],
+  div[style*="gridTemplateColumns: repeat(3,1fr)"],
+  div[style*="gridTemplateColumns: 'repeat(4,1fr)'"],
+  div[style*="gridTemplateColumns: 'repeat(3,1fr)'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  nav div[style*="gap: 1.25rem"] {
+    gap: 0.5rem !important;
+  }
+}
